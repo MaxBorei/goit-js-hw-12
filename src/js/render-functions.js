@@ -30,6 +30,39 @@ export function createGallery(images) {
   lightbox.refresh();
 }
 
+export function appendToGallery(images) {
+  const markup = images.map(
+    ({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
+      <li class="card">
+        <a href="${largeImageURL}" class="gallery-item">
+          <img src="${webformatURL}" alt="${tags}" />
+        </a>
+        <div class="card-info">
+          <p>👍 Likes: ${likes}</p>
+          <p>👁 Views: ${views}</p>
+          <p>💬 Comments: ${comments}</p>
+          <p>⬇ Downloads: ${downloads}</p>
+        </div>
+      </li>
+    `
+  ).join("");
+
+  catCard.insertAdjacentHTML("beforeend", markup);
+  lightbox.refresh();
+  scrollToNewContent();
+}
+
+function scrollToNewContent() {
+  const firstCard = document.querySelector(".gallery .card");
+  if (firstCard) {
+    const cardHeight = firstCard.getBoundingClientRect().height;
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: "smooth",
+    });
+  }
+}
+
 export function clearGallery() {
   catCard.innerHTML = "";
 }
@@ -40,4 +73,18 @@ export function showLoader() {
 
 export function hideLoader() {
   loader.style.display = "none";
+}
+
+export function hideLoadMoreButton() {
+  const loadMoreBtn = document.querySelector(".load-more");
+  if (loadMoreBtn) {
+    loadMoreBtn.classList.remove("is-visible");
+  }
+}
+
+export function showLoadMoreButton() {
+  const loadMoreBtn = document.querySelector(".load-more");
+  if (loadMoreBtn) {
+    loadMoreBtn.classList.add("is-visible");
+  }
 }
